@@ -1,0 +1,233 @@
+\documentclass{amsart}
+
+% biber
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage{amsthm}
+\usepackage{thmtools,thm-restate}
+\usepackage{amsfonts}
+\usepackage{hyperref}
+\usepackage[backend=biber,url=true,doi=true,eprint=false,style=alphabetic]{biblatex}
+\usepackage{enumitem}
+\usepackage[justification=centering,singlelinecheck=false]{caption}
+\usepackage{indentfirst}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{listings}
+\usepackage[x11names, rgb]{xcolor}
+\usepackage{tikz}
+\usepackage{hyperref}
+\usepackage{subcaption}
+\usepackage{booktabs}
+\usepackage{linegoal}
+\usepackage{csquotes}
+\usetikzlibrary{snakes,arrows,shapes}
+
+\addbibresource{references.bib}
+
+\makeatletter
+\def\subsection{\@startsection{subsection}{3}%
+  \z@{.5\linespacing\@plus.7\linespacing}{.1\linespacing}%
+  {\normalfont}}
+\makeatother
+
+\makeatletter
+\patchcmd{\@setauthors}{\MakeUppercase}{}{}{}
+\makeatother
+
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\Val}{\text{Val}}
+\DeclareMathOperator*{\Ch}{\text{Ch}}
+\DeclareMathOperator*{\Pa}{\text{Pa}}
+\DeclareMathOperator*{\Sc}{\text{Sc}}
+\newcommand{\ov}{\overline}
+\newcommand{\region}{\mathcal}
+
+\newcommand\defeq{\mathrel{\overset{\makebox[0pt]{\mbox{\normalfont\tiny\sffamily def}}}{=}}}
+
+\newcommand{\algorithmautorefname}{Algorithm}
+\algrenewcommand\algorithmicrequire{\textbf{Input}}
+\algrenewcommand\algorithmicensure{\textbf{Output}}
+\algrenewcomment[1]{\hspace{0.25cm}\(\triangleright\) #1}
+\algnewcommand{\LineComment}[1]{\State\,\(\triangleright\) #1}
+
+\captionsetup[table]{labelsep=space}
+
+\setlistdepth{9}
+\newlist{deepitemize}{itemize}{9}
+\setlist[deepitemize,1]{label=$\bullet$}
+\setlist[deepitemize,2]{label=$\bullet$}
+\setlist[deepitemize,3]{label=$\bullet$}
+\setlist[deepitemize,4]{label=$\bullet$}
+\setlist[deepitemize,5]{label=$\bullet$}
+\setlist[deepitemize,6]{label=$\bullet$}
+\setlist[deepitemize,7]{label=$\bullet$}
+\setlist[deepitemize,8]{label=$\bullet$}
+\setlist[deepitemize,9]{label=$\bullet$}
+
+\theoremstyle{plain}
+
+\newcounter{dummy-def}\numberwithin{dummy-def}{section}
+\newtheorem{definition}[dummy-def]{Definition}
+\newcounter{dummy-thm}\numberwithin{dummy-thm}{section}
+\newtheorem{theorem}[dummy-thm]{Theorem}
+\newcounter{dummy-prop}\numberwithin{dummy-prop}{section}
+\newtheorem{proposition}[dummy-prop]{Proposition}
+\newcounter{dummy-corollary}\numberwithin{dummy-corollary}{section}
+\newtheorem{corollary}[dummy-corollary]{Corollary}
+\newcounter{dummy-lemma}\numberwithin{dummy-lemma}{section}
+\newtheorem{lemma}[dummy-lemma]{Lemma}
+\newcounter{dummy-ex}\numberwithin{dummy-ex}{section}
+\newtheorem{exercise}[dummy-ex]{Exercise}
+\newcounter{dummy-eg}\numberwithin{dummy-eg}{section}
+\newtheorem{example}[dummy-eg]{Example}
+
+\numberwithin{equation}{section}
+
+\newcommand{\set}[1]{\mathbf{#1}}
+\newcommand{\pr}{\mathbb{P}}
+\newcommand{\eps}{\varepsilon}
+\renewcommand{\implies}{\Rightarrow}
+
+\newcommand{\bigo}{\mathcal{O}}
+
+\setlength{\parskip}{1em}
+
+\lstset{frameround=fttt,
+	numbers=left,
+	breaklines=true,
+	keywordstyle=\bfseries,
+	basicstyle=\ttfamily,
+}
+
+\newcommand{\code}[1]{\lstinline[mathescape=true]{#1}}
+\newcommand{\mcode}[1]{\lstinline[mathescape]!#1!}
+\newcommand{\dset}[1]{\mathcal{#1}}
+\newcommand{\ddspn}[2]{\frac{\partial#1}{\partial#2}}
+\newcommand{\iddspn}[2]{\partial#1/\partial#2}
+
+\title{%
+  \noindent\rule{13cm}{1.0pt}\\
+  \vspace{0.2cm}
+  A Polynomial-time Reduction of the Quadratic Congruence Problem to the 3-SAT and other Related Problems
+  \noindent\rule{13cm}{0.8pt}
+}
+\xdef\shorttitle{Quadratic congruence polynomial-time reduction}
+\author[]{\normalsize Renato Lui Geh\\\small NUSP\@: 8536030\\\\Computational Number Theory
+(MAC6927)\\Prof\@. Sinai Robins\\University of São Paulo\\}
+
+\begin{document}
+
+\begin{abstract}
+  In this term paper for MAC6927 --- Computational Number Theory, we explore the history behind the
+  quadratic congruence problem (QCP) and other related number theoric problems; show a
+  polynomial-time reduction from the QCP to the 3-SAT quoting Adleman and Mander's 1978
+  theorem~\cite{qcp2}, implying that quadratic congruence is NP-complete; and show some solved and
+  unsolved problems in Number Theory that are directly (or indirectly) related to the QCP problem
+  and its membership in NP\@.
+  \vspace*{-3.5em}
+\end{abstract}
+
+\maketitle
+
+\section{History}
+
+German mathematician David Hilbert published~\cite{hilbert} in 1902 a set of 23 unsolved problems
+in mathematics he deemed to be most important unanswered mathematical problems of the 20th century.
+Since then 9 of them have been solved (at the time the author is writing this line and as far as
+the author is aware), 9 are considered partially solved, three of them are unsolved and two of them
+are considered too vague. Unsolved problems include the infamous Riemann Hypothesis and an
+extension to the Kronecker-Weber Theorem. Amongst solved problems is the 10th Hilbert problem.
+
+\textbf{10th Hilbert Problem:} Given a diophantine equation with any number of unknown quantities
+and with rational integral numerical coefficients: \textit{to devise a process according to which
+it can be determined by a finite number of operations whether the equation is solvable in rational
+integers}.
+
+It was answered in 1970 by Matiyasevich~\cite{diophantine} to be impossible. The question now
+becomes, in which cases is there an algorithm for solvability and what is the complexity of such
+algorithms? In 1976, Adleman and Manders~\cite{qcp1} partially answered these questions by proving
+that, for the quadratic cases, there exists an algorithm and it is NP-complete. In their proof,
+they also found that, through a slight modification in the final step of their proof, it was
+possible to answer the quadratic congruence problem. A cleaner version of this proof was published
+in 1978 by Adleman and Manders~\cite{qcp2}, proof we try to explain in this paper.
+
+In this paper we focus on the second result of Adleman and Mander's 1978 article, but also show the
+main result, namely that the set of quadratic diophantine equations with natural numbers solutions
+is NP-complete. The proof is done through a polynomial-time reduction to the 3-SAT problem. This
+reduction implies that both problems covered in Adleman and Mander's article are in NP-complete.
+
+In 1971, American mathematician Stephen Cook published ``The Complexity of Theorem-proving
+Procedures''~\cite{cook}, and in the next year, his fellow countryman Richard Karp published
+``Reducibility Among Combinatorial Problems''~\cite{karp}. The two articles introduced the concepts
+of P and NP classes, yielding the duo a Turing Award. Interestingly in 1973, on the other side of
+the Iron Curtain, Ukrainian Leonard Levin published~\cite{levin} in the USSR equivalent results to
+Cook's and Karp's, but considering search problems instead of decision problems (an interesting
+remark is that Levin did not receive a Turing Award for his work, despite having achieved
+equivalent results). Both works resulted in the following statement: that any problem in NP can be
+reduced in polynomial time by a deterministic Turing machine to the problem of satisfiability of a
+Boolean formula, i.e.\ the SAT problem.  Additionally, if there exists a deterministic polynomial
+time algorithm for solving SAT, then every NP problem can be solved by a deterministic polynomial
+time algorithm.
+
+This independent, parallel work from opposite parts of the world, ideologically and geographically,
+gave rise to what is considered one of the most important open questions in theoretical computer
+science, the P vs NP problem.
+
+\begin{deepitemize}
+  \item Satisfiability (SAT)
+    \begin{deepitemize}
+      \item 0--1 integer programming
+      \item Clique
+        \begin{deepitemize}
+          \item Set packing
+          \item Vertex cover
+            \begin{deepitemize}
+              \item Set covering
+              \item Feedback node set
+              \item Feedback arc set
+              \item Directed Hamiltonian cycle
+                \begin{deepitemize}
+                  \item Undirected Hamiltonian cycle
+                \end{deepitemize}
+            \end{deepitemize}
+        \end{deepitemize}
+      \item Satisfiability with at most 3 literals per clause (3-SAT)
+        \begin{deepitemize}
+          \item Chromatic number
+            \begin{deepitemize}
+              \item Clique cover
+              \item Exact cover
+                \begin{deepitemize}
+                  \item Hitting set
+                  \item Steiner set
+                  \item 3-dimensional matching
+                  \item Knapsack
+                    \begin{deepitemize}
+                      \item Job sequencing
+                      \item Partition
+                        \begin{deepitemize}
+                          \item Max cut
+                        \end{deepitemize}
+                    \end{deepitemize}
+                \end{deepitemize}
+            \end{deepitemize}
+        \end{deepitemize}
+    \end{deepitemize}
+\end{deepitemize}
+
+In his 1972 paper, Karp also published a list of 21 NP-complete problems in which he showed
+reductions implying its membership in the NP-complete class. The list above is Karp's 21
+NP-complete problems, where the nesting indicates the direction of the reduction. For instance, the
+knapsack problem was reduced to the exact cover problem, which was reduced to chromatic number,
+which was reduced to the 3-SAT, and the 3-SAT was reduced to the SAT problem.
+
+%--------------------------------------------------------------------------------------------------
+
+\printbibliography[]
+
+\end{document}
