@@ -73,8 +73,7 @@
 
 \newcounter{dummy-def}\numberwithin{dummy-def}{section}
 \newtheorem{definition}[dummy-def]{Definition}
-\newcounter{dummy-thm}\numberwithin{dummy-thm}{section}
-\newtheorem{theorem}[dummy-thm]{Theorem}
+\newtheorem{theorem}{Theorem}
 \newcounter{dummy-prop}\numberwithin{dummy-prop}{section}
 \newtheorem{proposition}[dummy-prop]{Proposition}
 \newcounter{dummy-corollary}\numberwithin{dummy-corollary}{section}
@@ -131,7 +130,7 @@
 \begin{abstract}
   In this term paper for MAC6927 --- Computational Number Theory, we explore the history behind the
   quadratic congruence problem (QCP) and other related number theoric problems; show a
-  polynomial-time reduction from the 3-SAT to the QCP quoting Adleman and Mander's 1978
+  polynomial-time reduction from the 3-SAT to the QCP quoting Adleman and Manders' 1978
   theorem~\cite{qcp2}, implying that quadratic congruence is NP-complete; and show some solved and
   unsolved problems in Number Theory that are directly (or indirectly) related to the QCP problem
   and its membership in NP\@.
@@ -162,10 +161,10 @@ they also found that, through a slight modification in the final step of their p
 possible to answer the quadratic congruence problem. A cleaner version of this proof was published
 in 1978 by Adleman and Manders~\cite{qcp2}, proof we try to explain in this paper.
 
-In this paper we focus on the second result of Adleman and Mander's 1978 article, but also show the
+In this paper we focus on the second result of Adleman and Manders' 1978 article, but also show the
 main result, namely that the set of quadratic diophantine equations with natural numbers solutions
 is NP-complete. The proof is done through a polynomial-time reduction from the 3-SAT problem. This
-reduction implies that both problems covered in Adleman and Mander's article are in NP-complete.
+reduction implies that both problems covered in Adleman and Manders' article are in NP-complete.
 
 In 1971, American mathematician Stephen Cook published ``The Complexity of Theorem-proving
 Procedures''~\cite{cook}, and in the next year, his fellow countryman Richard Karp published
@@ -293,7 +292,7 @@ This classic computer science problem turns out to be $\Theta(m\cdot n)$. Follow
 Karp's, we treat only the case for decision problems. One might think this severly restricts the
 generality of complexity classes, but it is easy to see that one can treat optimization and search
 problems as special cases of decision problems. We do this by restricting these problems into their
-decision problem subsets:
+decision problem subproblems:
 
 \begin{algorithm}[h]
   \caption*{\textbf{Decision problem:} greatest common divisor}
@@ -431,7 +430,244 @@ that QCP is NP-complete.
 
 \section{The Reduction}
 
+In this section we first define the Quadratic Congruence Problem (QCP), state the second theorem
+in~\cite{qcp1}, quote the algorithm used in the article that will be used in the proof, and then we
+show a complete and detailed proof of the reduction.
 
+We first define the QCP as a decision problem.
+
+\begin{algorithm}[h]
+  \caption*{\textbf{Problem:} quadratic congruence}
+  \begin{algorithmic}[1]
+    \Require\, $\alpha,\beta,\gamma\in\mathbb{Z}$
+    \Ensure\, Boolean value
+    \Statex\, Is there a solution $x\in\mathbb{Z}$ where
+    \begin{equation*}
+      x^2 \equiv\alpha\mod\beta
+    \end{equation*}
+    and such that $0\leq x\leq\gamma$?
+  \end{algorithmic}
+\end{algorithm}
+
+It turns out that the QCP is NP-complete, as we shall prove later. One might think that the QCP's
+complexity difficulty lies on the factorization of $\beta$. However, even when the full
+factorization of $\beta$ is given, as the reduction shows, it is still NP-complete.
+
+Another interesting note regarding the QCP problem is that, finding a solution $x$ without the
+second restriction (i.e.\ no upper bound on $x$, $\gamma=\infty$) is solvable in polynomial time if
+we are given $\beta$'s factorization. Furthermore, if we assume the Extended Riemann Hypothesis to
+be true, the problem is also solvable in polynomial time when $\beta$ is
+prime~\cite{garey-johnson}. Additionally, the problem is trivially solvable in pseudo-polynomial
+time, meaning given a nondeterministic Turing machine, one can solve by running a ``guess a
+solution and check whether it is a correct'' algorithm in polynomial time~\cite{qcp2}.
+
+We now state the theorem that covers the reduction.
+
+\begin{theorem}[Adleman and Manders, 1976]\label{qcp-thm}
+  The (problem of accepting the) set of quadratic congruences (in a standard encoding)
+  \begin{equation*}
+    x^2\equiv\alpha\mod\beta
+  \end{equation*}
+  with solutions $x\in\omega$ satisfying
+  \begin{equation*}
+    0\leq x\leq\gamma;\quad \alpha,\beta,\gamma\in\omega
+  \end{equation*}
+  is NP-complete.
+\end{theorem}
+
+It is easy to prove QCP's membership in NP\@. One could design an algorithm that first checks
+whether the input instance $x$ obeys the condition $0\leq x\leq\gamma$. If it passes, we simply
+check whether $x^2\equiv\alpha\mod\beta$. This algorithm runs in $\bigo(1)$, and thus is
+polynomial. This is a polynomial verifier for the YES answer for the QCP, so QCP is in NP\@.
+
+Before we prove~\autoref{qcp-thm}, we first quote the algorithm used in the reduction
+from~\cite{qcp2}. We use this algorithm in the proof extensively. In the article, Adleman and
+Manders recommend the reader to simply skim over the algorithm, and then to refer it back when
+reading the proof. We also recommend this, as the intent of the algorithm is not clear at first
+glance.
+
+The algorithm itself is directly quoted from~\cite{qcp2}, but is also used in~\cite{qcp1}. The
+former is a modified version of the latter. We chose the first to quote as it looked to be simpler
+and cleaner. Comments of the form [Comment: $\ldots$ ] are comments taken directly from the
+article.
+
+\subsection{The algorithm}
+
+On input $\phi$, read $\phi$ and eliminate all duplicate conjuncts and those in which, for some
+variable $x_i$, both $x_i$ and $\ov{x}_i$ occur. Count the $l$ variables occurring in the remaining
+formula $\phi_R$. Let
+
+\begin{equation*}
+  \Sigma = \{\sigma_1,\ldots,\sigma_m\}
+\end{equation*}
+
+be a standard enumeration of all possible disjunctive clauses, formed from $x_1,\ldots,x_l$ and
+their complements, with at most three literals per clause and no variable occurring twice or both
+complemented and uncomplemented in a clause. Compute
+
+\begin{equation*}
+  \tau_\phi = -\sum_{\sigma_l\in\phi_R}8^j,
+\end{equation*}
+
+where, as below, we use $\in$ to denote the relation of an expressing \textit{occurring} in another
+expression. [Comment: $\tau_\phi$ is the only quantity computed which depends specifically on
+$\phi_R$, rather than just on the number $l$ of variables occurring in $\phi_R$.] Compute:
+
+\begin{align*}
+  &f_i^+ = \sum_{x_i\in\sigma_j}8^j, &i=1,2,\ldots,l,\\
+  &f_i^- = \sum_{\ov{x}_i\in\sigma_j}8^j, &i=1,2,\ldots,l.
+\end{align*}
+
+Set $n=2m+l$ and compute $c_j,j=0,\ldots,n$, as
+
+\begin{align*}
+  &\;c_0=1\\
+  &\begin{rcases*}
+  c_j=-\frac{1}{2}8^k,\qquad &j=2k-1,\\
+  c_j=-8^k,\qquad &j=2k,\\
+  \end{rcases*} &j=1,\ldots,2m\\
+  &\;c_{2m+j}=\frac{1}{2}(f_j^+ - f_j^-), &j=1,2,\ldots,l,
+\end{align*}
+
+and
+
+\begin{equation*}
+  \tau = \tau_\phi + \sum_{j=0}^n c_j + \sum_{i=1}^l f_i^-
+\end{equation*}
+
+[Comment: At this point we have in fact obtained a knapsack problem $sum_{j=0}^n c_j\alpha_j=\tau$,
+$\alpha_j\in\{-1, +1\}$, which is solvable if and only if $\phi$ is satisfiable; moreover, for any
+value of $\alpha_j\in\{-1,+1\}$, $|\sum_{j=0}^n c_j\alpha_j -\tau|<8^{m+1}$, so the knapsack
+problem is equivalent to $\sum_{j=0}^n c_j\alpha_j\equiv\tau\mod 8^{m+1}$, $\alpha_j\in\{-1,+1\}$.
+These assertions will become clear from the proof of correctness.]
+
+Determine the first $n+1$ primes, $p_0,\ldots,p_n$, exceeding
+
+\begin{equation*}
+  {(4(n+1)8^{m+1})}^\frac{1}{n-1}
+\end{equation*}
+
+[This is in fact never exceeds 12, so we can set $p_0=13$.]
+
+Determine parameters $\theta_j$, $j=0,1,\ldots,n$, as: the least $\theta_j\in\omega$ such that
+
+\begin{flalign*}
+  &\theta_j\equiv c_j\mod 8^{m+1},\\
+  &\theta_j\equiv 0\mod \prod_{i\neq j}^n p_i^{n+1},\\
+  &\theta_j\not\equiv 0\mod p_j.
+\end{flalign*}
+
+(Note: the following part of the algorithm was changed since Theorem 1 in article~\cite{qcp2} is
+the quadratic Diophantine solutions problem and Theorem 2 is the QCP\@. In our paper, we refer to
+Theorem 1 as the QCP, and Theorem 2 as the Diophantine problem.)
+
+Compute $H=\sum_{j=0}^n \theta_j$, $K=\prod_{j=0}^n p_j^{n+1}$ and output:
+
+\begin{enumerate}[label= (\alph*)]
+  \item for Theorem 1 (QCP):
+
+    \begin{align*}
+      x^2\equiv {(2\cdot 8^{m+1}+K)}^{-1}\cdot(K\tau^2+2\cdot 8^{m+1}H^2)\mod 2\cdot 8^{m+1}\cdot
+        K,\quad 0\leq x\leq H,\\
+      \text{where, } {(2\cdot 8^{m+1}+K)}^{-1}\text{ is the inverse of }(2\cdot 8^{m+1}+K)\mod
+      2\cdot 8^{m+1} \cdot K^n.\\
+    \end{align*}
+
+  \item for Theorem 2 (Diophantine):
+
+    \begin{align*}
+      {(K+1)}^3\cdot 2\cdot 8^{m+1}\cdot(H^2-x_1^2)+K(x_1^2-\tau^2)-x_2\cdot 2\cdot 8^{m+1}\cdot K=0.
+    \end{align*}
+\end{enumerate}
+
+\subsection{The proof}
+
+In this subsection we show the proof of correctness of the algorithm (i.e.\ the proof of the
+reduction). We follow the proof given in~\cite{qcp2}, but with all passages explicitly explained,
+as well as a proof of Lemma 2 that was left to the reader.
+
+We need to first show that the propositional formula $\phi$ is satisfiable if and only if the
+following expression is solvable.
+
+\begin{equation*}
+  \sum_{j=0}^n \theta_j\alpha_j\equiv\tau\mod 8^{m+1},\qquad\alpha_j\in\{-1,+1\},\quad j=0,\ldots,n
+\end{equation*}
+
+It is easy to see that the formula $\phi_R$ is satisfiable if and only if $\phi$ is, since $\phi_R$
+is the result of taking out all irrelevant clauses. But $\phi_R$ is satisfiable if and only if
+there is a valuation $r:\{x_1,\ldots,x_l\}\to\{0,1\}$ such that for each disjunctive clause
+$\sigma_k\in\Sigma$
+
+\begin{equation}\label{eq-rk}
+  0 = R_k
+  \begin{dcases}
+    =y_k-\sum_{x_i\in\sigma_k} r(x_i)-\sum_{\ov{x}_i\in\sigma_k} (1-r(x_i))+1, \quad&\text{if }
+    \sigma_k\in\phi_R,\hfill(1)\\
+    =y_k-\sum_{x_i\in\sigma_k} r(x_i)-\sum_{\ov{x}_i\in\sigma_k} (1-r(x_i)), \quad&\text{if }
+    \sigma_k\not\in\phi_R.\hfill(2)
+  \end{dcases}
+\end{equation}
+
+is solvable by $y_k\in\{0,1,2,3\}$. We also add the constraint
+
+\begin{equation*}
+  0 = R_0 = \alpha_0 + 1, \qquad \alpha_0\in\{0, 1\}
+\end{equation*}
+
+that does not influence the satisfiability of the system. We next prove that~\autoref{eq-rk} does
+in fact hold for the if and only if satisfiability.
+
+\begin{proof}[Proof of \autoref{eq-rk}]
+  We first consider case (1):
+
+  \begin{equation*}
+    0 = y_k-\sum_{x_i\in\sigma_k} r(x_i)-\sum_{\ov{x}_i\in\sigma_k} (1-r(x_i))+1,\quad\text{if }
+    \sigma_k\in\phi_R
+  \end{equation*}
+
+  So $y_k$ must be of the form:
+
+  \begin{equation*}
+    y_k=\sum_{x_i\in\sigma_k} r(x_i)+\sum_{\ov{x}_i\in\sigma_k} (1-r(x_i))-1
+  \end{equation*}
+
+  With no loss of generality, we can enumerate all possible clauses $\sigma_k$ as follows
+
+  \begin{align*}
+    &(x_p\vee x_q\vee x_l): &y_k=r(x_p)+r(x_q)+r(x_l)-1\implies &-1\leq y_k\leq 2\\
+    &(\ov{x}_p\vee x_q\vee x_l): &y_k=r(x_q)+r(x_l)+1-r(x_p)-1\implies &-1\leq y_k\leq 2\\
+    &(\ov{x}_p\vee\ov{x}_q\vee x_l):&y_k=r(x_l)+2-r(x_p)-r(x_q)-1\implies &-1\leq y_k\leq 2\\
+    &(\ov{x}_p\vee\ov{x}_q\vee\ov{x}_l):&y_k=3-r(x_p)-r(x_q)-r(x_l)-1\implies &-1\leq y_k\leq 2
+  \end{align*}
+
+  Note how in all cases above, the clause is satisfiable if and only if $y_k\neq -1$. In the first
+  case, when $y_k=-1$, no literal $x_i$ is valuated as true. In the second case, when $y_k\neq -1$,
+  no literal $x_i$ is valuated as true and $\ov{x}_p$ is valuated as false. The third case is
+  similar, with $x_l$ false, and $\ov{x}_p,\ov{x}_q$ false. For the last case, all $\ov{x}_i$ are
+  set to false. When $y_k\neq -1$, there exists some literal being valuated as true, and therefore
+  the clause $\sigma_k$ is valuated as true.
+
+  For case (2), we do the same. In this case, $y_k$ is of the form:
+
+  \begin{equation*}
+    y_k=\sum_{x_i\in\sigma_k} r(x_i)+\sum_{\ov{x}_i\in\sigma_k} (1-r(x_i))
+  \end{equation*}
+
+  Enumerating all literal combinations we have:
+
+  \begin{align*}
+    &(x_p\vee x_q\vee x_l): &y_k=r(x_p)+r(x_q)+r(x_l)\implies &0\leq y_k\leq 3\\
+    &(\ov{x}_p\vee x_q\vee x_l): &y_k=r(x_q)+r(x_l)+1-r(x_p)\implies &0\leq y_k\leq 3\\
+    &(\ov{x}_p\vee\ov{x}_q\vee x_l):&y_k=r(x_l)+2-r(x_p)-r(x_q)\implies &0\leq y_k\leq 3\\
+    &(\ov{x}_p\vee\ov{x}_q\vee\ov{x}_l):&y_k=3-r(x_p)-r(x_q)-r(x_l)\implies &0\leq y_k\leq 3
+  \end{align*}
+
+  The analysis for this case goes analogally to the previous case, but with $y_k=0$ being
+  instatisfiable. Note how $y_k=0$ is still a solution to the previous case. This inconsistency
+  does not break the hypothesis, since in (2) we are considering clauses $\sigma_k\not\in\phi_R$.
+  That is, $\sigma_k$ does not need to necessarily satisfy for $\phi_R$ to satisfy. However, for
+  $\phi_R$ to be satisfiable, $y_k$ needs to be in $\{0,1,2,3\}$, as we showed.
+\end{proof}
 
 %--------------------------------------------------------------------------------------------------
 
