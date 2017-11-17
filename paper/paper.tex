@@ -9,6 +9,7 @@
 \usepackage{amsthm}
 \usepackage{thmtools,thm-restate}
 \usepackage{amsfonts}
+\usepackage{amssymb}
 \usepackage{hyperref}
 \usepackage[backend=biber,url=true,doi=true,eprint=false,style=alphabetic]{biblatex}
 \usepackage{enumitem}
@@ -78,14 +79,11 @@
 \newtheorem{proposition}[dummy-prop]{Proposition}
 \newcounter{dummy-corollary}\numberwithin{dummy-corollary}{section}
 \newtheorem{corollary}[dummy-corollary]{Corollary}
-\newcounter{dummy-lemma}\numberwithin{dummy-lemma}{section}
-\newtheorem{lemma}[dummy-lemma]{Lemma}
+\newtheorem{lemma}{Lemma}
 \newcounter{dummy-ex}\numberwithin{dummy-ex}{section}
 \newtheorem{exercise}[dummy-ex]{Exercise}
 \newcounter{dummy-eg}\numberwithin{dummy-eg}{section}
 \newtheorem{example}[dummy-eg]{Example}
-
-\numberwithin{equation}{section}
 
 \newcommand{\set}[1]{\mathbf{#1}}
 \newcommand{\pr}{\mathbb{P}}
@@ -231,11 +229,11 @@ NP-complete problems, where the nesting indicates the direction of the reduction
 exact cover problem was reduced to the knapsack problem, chromatic number was reduced to exact
 cover, 3-SAT was reduced to exact cover, and the SAT was reduced to the 3-SAT problem.
 
-From this we know that the 3-SAT is NP-complete. Not only that, any problem that is reduces
-3-SAT is also in NP\@. In the next sections we will provide a brief review on polynomial-time
-reductions, present proper definitions on the QCP and 3-SAT, and prove the reduction. This section
-provided a brief historical overview, but we do not restrict historical remarks to only this
-section. When relevant, we provide short historical anecdotes on the subject.
+From this we know that the 3-SAT is NP-complete. Not only that, any problem that reduces 3-SAT is
+also in NP\@. In the next sections we will provide a brief review on polynomial-time reductions,
+present proper definitions on the QCP and 3-SAT, and prove the reduction. This section provided a
+brief historical overview, but we do not restrict historical remarks to only this section. When
+relevant, we provide short historical anecdotes on the subject.
 
 \section{Brief Review on Complexity Theory}
 
@@ -668,6 +666,479 @@ in fact hold for the if and only if satisfiability.
   That is, $\sigma_k$ does not need to necessarily satisfy for $\phi_R$ to satisfy. However, for
   $\phi_R$ to be satisfiable, $y_k$ needs to be in $\{0,1,2,3\}$, as we showed.
 \end{proof}
+
+In order for $\phi_R$ to be satisfiable, every $\sigma_k\in\phi_R$ must be satisfiable. This is an
+if and only if condition on $y_k\in\{0,1,2,3\}$, as we showed earlier. For any satisfiable
+$\phi_R$, we have the following inequalities.
+
+\begin{align*}
+  -3&\leq R_k\leq 4, \quad &k=1,2,\ldots,m\\
+  0&\leq R_0\leq 2
+\end{align*}
+
+From this, it follows that
+
+\begin{equation}\label{eq-1}
+  R_k=0, \quad k=0,1,\ldots,m \iff \sum_{k=0}^m R_k\cdot 8^k = 0
+\end{equation}
+
+and also that
+
+\begin{equation}\label{eq-2}
+  \left| \sum_{k=0}^m R_k\cdot 8^k \right| < 8^{m+1}
+\end{equation}
+
+This is true because
+
+\begin{align*}
+  \left|\sum_{k=0}^m R_k\cdot 8^k\right|=\left|R_0\cdot 8^0+\sum_{k=1}^m R_k\cdot 8^k\right|&\leq
+    2+\sum_{k=1}^m 4\cdot 8^k\\
+    &\leq 2+(4\cdot 8+4\cdot 8^2+\cdots+4\cdot 8^m)\\
+    &\leq2+8\underbrace{(4+4\cdot 8+4\cdot 8^2+\cdots+4\cdot 8^{m-1})}_{\text{geometric series}}\\
+    &\leq 2+ 8\left(\frac{4}{7}\cdot 8^m-\frac{4}{7}\right)\\
+    &\leq 2+\frac{4}{7}\cdot 8^{m+1} -8\cdot\frac{4}{7}\\
+    &< 8^{m+1}
+\end{align*}
+
+From (\ref{eq-1}) and (\ref{eq-2}), we have that
+
+\begin{equation}\label{eq-3}
+  R_k=0,\quad k=0,1,\ldots,m \iff \sum_{k=0}^m R_k\cdot 8^k\equiv 0\mod 8^{m+1}.
+\end{equation}
+
+We now wish to prove that we can reorganize the RHS of~\autoref{eq-3} into the following expression
+by using the terms from the algorithm. That is, that
+
+\begin{equation}\label{eq-p2}
+ \sum_{k=0}^m R_k\cdot 8^k\equiv 0\mod 8^{m+1}\iff\sum_{j=0}^n c_j\alpha_j\equiv\tau\mod 8^{m+1}.
+\end{equation}
+
+\begin{proof}[Proof of \autoref{eq-p2}]
+
+We replace variables $y_k$ and valuations $r(x_i)$ by $\{-1,+1\}$-valued variables:
+
+\begin{align*}
+  y_k=&\frac{1}{2}\left[\left(1-\alpha_{2k-1}\right)+2\cdot\left(1-\alpha_{2k}\right)\right]\\
+  r(x_i)=&\frac{1}{2}\left(1-\alpha_{2m+i}\right)
+\end{align*}
+
+We call $R_k'$ the result of this substitution. It follows that
+
+\begin{equation*}
+  R_k'=\frac{1}{2}[(1-\alpha_{2k-1})+2(1-\alpha_{2k})]-\sum_{x_i\in\sigma_k}\frac{1}{2}(1-
+  \alpha_{2m+i})-\sum_{\ov{x}_i\in\sigma_k}\left[1-\frac{1}{2}(1-\alpha_{2m+i})\right]+1
+\end{equation*}
+
+when $\sigma_k\in\phi_R$. Plugging $R_k'$ into (\ref{eq-3}) gives us
+
+\begin{equation}\label{eq-4}
+  \sum_{k=0}^m\left(\frac{8^k}{2}-\frac{8^k}{2}\alpha_{2k-1}+8^k-8^k\alpha_{2k}-
+  \sum_{x_i\in\sigma_k}\left(\frac{8^k}{2}-\frac{8^k}{2}\alpha_{2m+i}\right)-
+  \sum_{\ov{x}_i\in\sigma_k}\left(\frac{8^k}{2}+\frac{8^k}{2}\alpha_{2m+i}\right)+8^k\right)\equiv
+  0\mod 8^{m+1}
+\end{equation}
+
+Recall the $c_j$, $j=0,1,\ldots,n$ variables computed earlier in the algorithm:
+
+\begin{align*}
+  &\begin{rcases*}
+    c_{2k-1}=-\frac{1}{2}8^k\\
+    c_{2k}=-8^k\\
+  \end{rcases*} &j=1,\ldots,2m\\
+  &\;c_{2m+j}=\frac{1}{2}(f_j^+-f_j^-), &j=1,2,\ldots,l
+\end{align*}
+
+We wish to take equation (\ref{eq-4}) and make it look like
+
+\begin{equation*}
+  \sum_{j=0}^n c_j\alpha_j\equiv\tau\mod 8^{m+1}, \quad\alpha_j\in\{-1,+1\}.
+\end{equation*}
+
+Replacing the values from (\ref{eq-4}) with the corresponding $c_j$ values gives us
+
+\begin{equation}\label{eq-5}
+  \sum_{k=0}^m\left(\underbrace{-c_{2k-1}+c_{2k-1}\alpha_{2k-1}-c_{2k}+c_{2k}\alpha_{2k}}_{(\star)}
+  -\underbrace{\sum_{x_i\in\sigma_k}8^k\left(\frac{1}{2}-\frac{1}{2}\alpha_{2m+i}\right)-\sum_{
+  \ov{x}_i\in\sigma_k}8^k\left(\frac{1}{2}+\frac{1}{2}\alpha_{2m+i}\right)}_{(\star\star)}+
+  \underbrace{8^k}_{(\star\star\star)}\right)
+\end{equation}
+
+on the LHS\@. We first turn our attention to $(\star)$. Notice how the pair $(2k-1,2k)$ over the
+range $[0,m]$ covers the range $[0,2m]$, meaning that
+
+\begin{equation*}
+  \sum_{k=0}^m \left(c_{2k-1}+c_{2k}\right) = \sum_{i=0}^{2m} c_{i}.
+\end{equation*}
+
+In particular, separating the terms of the summation into two parts gives us
+
+\begin{equation*}
+  \overbrace{\sum_{k=0}^m\left(c_{2k-1}\alpha_{2k-1}\right)-\sum_{k=0}^m\left(c_{2k-1}+c_{2k}
+  \right)}^{(\star)} = \sum_{j=0}^{2m}c_j\alpha_j-\sum_{j=0}^{2m}c_j
+\end{equation*}
+
+Recall from the algorithm that
+
+\begin{align*}
+  &f_i^+ = \sum_{x_i\in\sigma_j}8^j, &i=1,2,\ldots,l,\\
+  &f_i^- = \sum_{\ov{x}_i\in\sigma_j}8^j, &i=1,2,\ldots,l.
+\end{align*}
+
+Since $f_j^+$ and $f_j^-$ are both counting the number of literals in $\phi_R$, it is easy to see
+that $\sum_{x_i\in\phi_R}f_i^+=\sum_{\ov{x}_i\in\phi_R}f_i^-$, since they range over all
+$\sigma_k$, and $\Sigma$ is the set of all $\sigma_k$ relevant clause permutations. So every
+literal $x_i$ must appear the same number of times as $\ov{x}_i$. This means $\sum_{j=1}^l c_{2m+j}
+= 0$. Note how there exactly $l$ variables in $\phi_R$. From this we have that
+
+\begin{equation*}
+  \sum_{j=0}^{2m}c_j\alpha_j-\sum_{j=0}^{2m}c_j = \sum_{j=0}^n c_j\alpha_j-\sum_{j=0}^n c_j.
+\end{equation*}
+
+We now consider $(\star\star)$. It follows from $(\star\star)$ that
+
+\begin{equation*}
+  -\underbrace{\sum_{x_i\in\sigma_k}\frac{8^k}{2}}_{\frac{f_i^+}{2}}-
+  \underbrace{\sum_{\ov{x}_i\in\sigma_k}\frac{8^k}{2}}_{\frac{f_i^-}{2}}-\frac{8^k}{2}
+  \underbrace{\left(\sum_{x_i\in\sigma_k}\alpha_{2m+i}-\sum_{\ov{x}_i\in\sigma_k}\alpha_{2m+i}
+  \right)}_{=0\text{ when summing over $[0,m]$}} = -\sum_{\hat{x}_i\in\sigma_k}
+  \frac{1}{2}\left(f_i^++f_i^-\right)
+\end{equation*}
+
+where we say $\hat{x}_i\in\sigma_k$ if $x_i\in\sigma_k$ or $\ov{x}_i\in\sigma_k$. The same argument
+from $(\star)$ can be used to show that
+
+\begin{equation*}
+  -\sum_{k=0}^m\sum_{\hat{x}_i\in\sigma_k}\frac{1}{2}(f_i^++f_i^-)=-\sum_{k=0}^m\sum_{\hat{x}_i
+  \in\sigma_k}f_i^-
+\end{equation*}
+
+Now we have a summation over all disjunctive clauses $\sigma_k$, and for each $k$ we are summing
+all occurrences in which $\hat{x}_i\in\sigma_k$. But this means we are summing all times in which
+each variable occurs in all clauses. The number of variables is $l$, so it follows that
+
+\begin{equation*}
+  -\sum_{k=0}^m\sum_{\hat{x}_i\in\sigma_k}f_i^- =-\sum_{i=1}^l f_i^-.
+\end{equation*}
+
+Let us now focus on $(\star\star\star)$. It is easy to see that
+
+\begin{equation*}
+  \sum_{k=0}^m 8^k = \sum_{\sigma_j\in\phi_R} 8^j = -\tau_\phi
+\end{equation*}
+
+Plugging the results (note that these results already take into account the outer summation
+$\sum_{k=0}^m$, and thus we ommit it) from $(\star), (\star\star), (\star\star\star)$ in
+\autoref{eq-5} gives us the following expression:
+
+\begin{equation*}
+  \underbrace{\sum_{j=0}^n c_j\alpha_j-\sum_{j=0}^n c_j}_{(\star)}-\underbrace{\sum_{i=1}^l
+  f_i^-}_{(\star\star)}-\underbrace{\tau_\phi}_{(\star\star\star)}\equiv 0\mod 8^{m+1}
+\end{equation*}
+
+Isolating the first summation of $(\star)$ yields
+
+\begin{equation*}
+  \sum_{j=0}^n c_j\alpha_j\equiv\tau_\phi+\sum_{j=0}^n c_j+\sum_{i=1}^l f_i^-\mod 8^{m+1}
+\end{equation*}
+
+The RHS of the congruence is exactly the definition of $\tau$ from the algorithm. Therefore:
+
+\begin{equation*}
+  \sum_{j=0}^n c_j\alpha_j\equiv\tau\mod 8^{m+1}, \quad\alpha_j\in\{-1,+1\}
+\end{equation*}
+
+\end{proof}
+
+From the definition of $\theta_j$, $j=0,\ldots,n$, it follows directly that the above is equivalent
+to
+
+\begin{equation*}
+  \sum_{j=0}^n\theta_j\alpha_j\equiv\tau\mod 8^{m+1}, \quad\alpha_j\in\{-1,+1\}
+\end{equation*}
+
+\begin{lemma}\label{lemma-1}
+  Let $K$ and $H$ be as in the algorithm. The general solution of the system
+  \begin{align*}
+    &0\leq|x|\leq H, \qquad x\in\mathbb{Z} \quad &(1)\\
+    &(H+x)(H-x)\equiv 0\mod K &(2)
+  \end{align*}
+  is given by
+  \begin{equation*}
+    x=\sum_{j=0}^n\alpha_j\theta_j, \quad\alpha_j\in\{-1,+1\},\quad j=0,1,\ldots,n.
+  \end{equation*}
+\end{lemma}
+\begin{proof}
+  Let us recall the definitions of $K$ and $H$ from the algorithm:
+
+  \begin{align*}
+    &K=\prod_{i=0}^n p_i^{n+1} \quad\text{, where $p_0=13$ and $p_1,p_2,\ldots,p_n$ primes
+    exceeding 12.}\\
+    &H=\sum_{i=0}^n\theta_i
+  \end{align*}
+
+  It is obvious that $x$ is a solution to the system. We need to prove that these are the only
+  solutions to the system. Let $x$ be a solution to the system. Then
+
+  \begin{equation*}
+    (H+x)(H-x)\equiv 0\mod p_j^{n+1}, \qquad j=0,1,\ldots,n
+  \end{equation*}
+
+  We will prove by contradiction. Assume that for some $j_0$:
+
+  \begin{equation*}
+    p_{j_0}|(H+x)\text{ and }p_{j_0}|(H-x)
+  \end{equation*}
+
+  Then $p_{j_0}|(H+x)+(H-x)=2H$. But $p_{j_0}>2$ and $p_{j_0}$ is prime, so $p_{j_0}|H$. It then
+  follows that $p_{j_0}|\sum_{j=0}^n\theta_j$. But from the definition of $\theta_j$, we know that
+  $p_{j_0}|\theta_j$ for all $j\neq j_0$, since we have
+
+  \begin{equation*}
+    \theta_j\equiv 0\mod\prod_{i\neq j}^n p_i^{n+1}\implies\prod_{i\neq j}^n p_i^{n+1}|\theta_j
+    \implies p_i|\theta_j, \quad i\neq j
+  \end{equation*}
+
+  So it must be that $p_{j_0}|\theta_{j_0}$, but from $\theta_j$'s definition:
+
+  \begin{equation*}
+    \theta_j\not\equiv 0\mod p_j\implies p_j\nmid\theta_j
+  \end{equation*}
+
+  We end up in a contradiction. Therefore we can conclude that for all $j$, $p_j^{n+1}$ divides
+  either $(H+x)$ or $(H-x)$, but not both.
+
+  We define:
+
+  \begin{align*}
+    &\alpha_j=
+    \begin{cases}
+      \phantom{-}1,  &\quad \text{if } p_j^{n+1}|(H-x)\\
+      -1,  &\quad \text{if } p_j^{n+1}|(H+x)
+    \end{cases}\\
+    &x'=\sum_{j=0}^n\alpha_j\theta_j
+  \end{align*}
+
+  So we have $x'\equiv\alpha_j\theta_j\equiv\alpha_j H\equiv x\mod p_j^{n+1}$, and $x'\equiv x\mod
+  p_j^{n+1}$, for all $j$, and so $x'\equiv x\mod K$.
+
+  \begin{equation*}
+    \begin{rcases}
+      & -H\leq x'\leq H\\
+      & -H\leq x\leq H\\
+    \end{rcases} \implies |x-x'|\leq 2H
+  \end{equation*}
+
+  But $p_j\geq{(4(n+1)8^{m+1})}^\frac{1}{n+1}$, and let
+
+  \begin{equation*}
+    \lambda_j=\frac{\theta_j}{\sum_{\substack{i=0\\i\neq j}}^n p_i^{n+1}}
+  \end{equation*}
+
+  We have that $\lambda_j<2\cdot 8^{m+1}$ for each $j$. Each term in $H$ is bounded by $K/2(n+1)$,
+  so $2H<K$. This means $|x-x'|<K$, but $x'\equiv x\mod K$. Therefore, it must be that $x=x'$.
+
+  Thus $x'$ is a solution and is the same as $x$, meaning any solution of the system is of that
+  form.
+\end{proof}
+
+From~\autoref{lemma-1}, the condition
+
+\begin{equation*}
+  \sum_{j=0}^n\theta_j\alpha_j\equiv\tau\mod 8^{m+1}
+\end{equation*}
+
+is equivalent to the system:
+
+\begin{align*}
+  (i) \quad &0\leq|x|\leq H, \quad x\in\mathbb{Z},\\
+  (ii) \quad &x\equiv\tau\mod 8^{m+1}, &\text{(I)}\\
+  (iii) \quad &(H+x)(H-x)\equiv 0\mod K
+\end{align*}
+
+\begin{lemma}\label{lemma-2}
+  Let $\tau$ be odd, $x\in\mathbb{Z}$, $k\geq 3$
+  \begin{align*}
+    (\tau+x)(\tau-x)\equiv 0\mod 2^{k+1}\iff\text{ either }\;&\tau+x\equiv 0\mod 2^k\\
+                                            \text{ or }\;&\tau-x\equiv 0\mod 2^k
+  \end{align*}
+\end{lemma}
+\begin{proof}
+  We first prove the converse $(\impliedby)$:
+
+  Assume it is possible for both cases to be true.
+  \begin{align*}
+    &\tau+x\equiv 0\mod 2^k\implies\tau\equiv -x\mod 2^k\\
+    &\tau-x\equiv 0\mod 2^k\implies\tau\equiv \phantom{-}x\mod 2^k
+  \end{align*}
+  So $\tau\equiv x\equiv 0\mod 2^k$. But $\tau$ is odd, leading to a contradiction. Therefore, only
+  one of the two can be true at the same time. Consider the first case ($\tau+x\equiv 0\mod 2^k$).
+  So $(\tau+x)\equiv 0\mod 2^k\implies(\tau+x)(\tau-x)\equiv 0\mod 2^k$. In other words,
+  $(\tau+x)(\tau-x)= 2^k \cdot c$. Multiplying $2$ on both sides yields $2(\tau+x)(\tau-x)
+  =2^{k+1}\cdot c$. Converting it back to its congruence form gives us $2(\tau+x)(\tau-x)\equiv
+  0\mod 2^{k+1}$. But $\tau+x\equiv 0\mod 2^k$, so we can substitute $(\tau+x)$ for $2^k$, giving
+  $2\cdot 2^k\cdot c(\tau-x)=2^{k+1}c(\tau-x)\equiv 0\mod 2^{k+ 1}$.  We do the same for
+  $\tau-x\equiv 0\mod 2^k$.
+
+  We now prove the direct implication $(\implies)$:
+
+  \begin{align*}
+    (\tau+x)(\tau-x)\equiv 0\mod 2^{k+1}\implies\text{ either }\;&\tau+x\equiv 0\mod 2^k\\
+                                            \text{ or }\;&\tau-x\equiv 0\mod 2^k
+  \end{align*}
+
+  We can rewrite $(\tau+x)(\tau-x)\equiv 0\mod 2^{k+1}$ as $(\tau+x)(\tau-x)=2^{k+1}\cdot c=2^k(2c)
+  =(\tau+x)(\tau-x)$. So $(\tau+x)(\tau-x)\equiv 0\mod 2^k$.
+
+  Let $a=\tau+x$ and $b=\tau-x$. We need to show that the cases:
+  \begin{align*}
+    (1) \quad &a\equiv 0\mod 2^k\quad\text{and}\quad b\neq 0\mod 2^k\\
+    (2) \quad &b\not\equiv 0\mod 2^k\quad\text{and}\quad b\not\equiv 0\mod 2^k
+  \end{align*}
+  are impossible if $a\cdot b\equiv 0\mod 2^k$. We take case (1) into consideration first.
+
+  \begin{equation*}
+    \begin{cases}
+      &\tau+x\equiv 0\mod 2^k\\
+      &\tau-x\equiv 0\mod 2^k\\
+    \end{cases}
+  \end{equation*}
+
+  But from the converse's proof, we know that this is impossible. Now we consider the second case.
+
+  \begin{align*}
+    \begin{cases}
+      &\tau+x\not\equiv 0\mod 2^k\\
+      &\tau-x\not\equiv 0\mod 2^k\\
+      &(\tau+x)(\tau-x)\equiv 0\mod 2^k\\
+    \end{cases}\quad&\implies&
+    \begin{cases}
+      &2^k\nmid\tau+x\\
+      &2^k\nmid\tau-x\\
+      &2^k\nmid(\tau+x)(\tau-x)\\
+    \end{cases}
+  \end{align*}
+
+  Which is a contradiction. Therefore, the two cases are impossible. It is easy to see that all the
+  remaining cases are the ones listed in the Lemma, and all are true.
+\end{proof}
+
+Consider the system (I). The conditions of~\autoref{lemma-2} apply to the system. Therefore system
+(I) is satisfiable if and only if system (II) is also satisfiable:
+
+\begin{align*}
+  (i) \quad &0\leq|x|\leq H, \quad x\in\mathbb{Z},\\
+  (ii) \quad &(\tau+x)(\tau-x)\equiv 0\mod 2\cdot 8^{m+1}, &\text{(II)}\\
+  (iii) \quad &(H+x)(H-x)\equiv 0\mod K
+\end{align*}
+
+From~\autoref{lemma-2}, (I)\,(ii) satisfies if and only if (II)\,(iii) satisfies, since if $\tau-x
+\equiv 0\mod 8^{m+1}$, then it satisfies (I)\,(ii); and if $\tau+x\equiv 0\mod 8^{m+1}$, then it
+satisfies (i) and (iii).
+
+Note how:
+
+\begin{align*}
+  (i) \quad &(\tau+x)(\tau-x)\equiv\tau^2-x^2\equiv 0\mod 2\cdot 8^{m+1}\\
+  (ii) \quad &(H+x)(H-x)\equiv H^2-x^2\equiv 0\mod K
+\end{align*}
+
+So we can restrict condition (i) to only positive integers:
+
+\begin{equation*}
+  0\leq x_1\leq H, \quad x_1\in\mathbb{Z}
+\end{equation*}
+
+Also note that $\gcd(2\cdot 8^{m+1}, K)=1$, since $K$ is a product of odd primes (in fact greater
+than 12) and $2\cdot 8^{m+1}$ a power of 2. Because of that, we can join both conditions (ii) and
+(iii) from system (II).
+
+\begin{equation*}
+  \lambda_1 2\cdot 8^{m+1}(H^2-x_1^2)+\lambda_2 K(\tau^2-x_1^2)\equiv 0\mod 2\cdot 8^{m+1}\cdot K
+\end{equation*}
+
+Where $\lambda_1$ and $\lambda_2$ are parameters we can freely choose subject to the following
+condition:
+
+\begin{equation*}
+  \gcd(\lambda_1,K)=\gcd(\lambda_2,2\cdot 8^{m+1})=1,\quad\lambda_1,\lambda_2\in\mathbb{Z}
+\end{equation*}
+
+We join these conditions into the new system (III):
+
+\begin{align*}
+  (i) \quad &0\leq x_1\leq H, \quad x_1\in\mathbb{Z},\\
+  (ii) \quad &\lambda_1 2\cdot 8^{m+1}(H^2-x_1^2)+\lambda_2 K(\tau^2-x_1^2)\equiv 0\mod 2\cdot
+    8^{m+1}\cdot K, &\text{(III)}\\
+  (iii) \quad &\gcd(\lambda_1,K)=\gcd(\lambda_2,2\cdot 8^{m+1})=1,\quad\lambda_1,\lambda_2\in
+    \mathbb{Z}
+\end{align*}
+
+In fact, choosing $\lambda_1$ and $\lambda_2$ provides proofs for two problems: the quadratic
+Diophantine problem (which we will mention later) and for the QCP\@. Furthermore, conditions
+(III)\,(i),\,(ii) are satisfiable for any $\lambda_1,\lambda_2$ obeying (III)\,(iii) or for no
+$\lambda_1$ and $\lambda_2$.
+
+We now finally provide a proof for~\autoref{qcp-thm}.
+
+\begin{proof}[Proof of~\autoref{qcp-thm}]
+  Choose $\lambda_1=\lambda_2=1$. It obviously satisfies (III)\,(iii). We rewrite (III)\,(ii) with
+  these values:
+  \begin{align*}
+    &2\cdot 8^{m+1}(H^2-x_1^2)+K(\tau^2-x_1^2)\equiv 0\mod 2\cdot 8^{m+1}\cdot K\\
+    &2\cdot 8^{m+1}H^2-2\cdot 8^{m+1}x_1^2+K\tau^2-x_1^2K\equiv 0\mod 2\cdot 8^{m+1}\cdot K\\
+    &K\tau^2+2\cdot 8^{m+1}\cdot H^2\equiv(2\cdot 8^{m+1}+K)\cdot x_1^2\mod 2\cdot 8^{m+1}\cdot K
+  \end{align*}
+  Note how $\gcd(2\cdot 8^{m+1}+K,2\cdot 8^{m+1}\cdot K)=1$, and as such there exists an inverse
+  ${(2\cdot 8^{m+1}+K)}^{-1}$. Multiplying the inverse on both sides, yields:
+
+  \begin{equation*}
+    {(2\cdot 8^{m+1}+K)}^{-1}\cdot(2\cdot 8^{m+1}+K)x_1^2\equiv{(2\cdot 8^{m+1}+K)}^{-1}(K\tau^2+
+    2\cdot 8^{m+1}\cdot H^2)\mod 2\cdot 8^{m+1}\cdot K
+  \end{equation*}
+
+  Rewriting the expression above gives us:
+
+  \begin{equation*}
+    x_1^2\equiv {(2\cdot 8^{m+1}+K)}^{-1}(K\tau^2+2\cdot 8^{m+1}\cdot H^2)\mod 2\cdot 8^{m+1}\cdot K
+  \end{equation*}
+
+  Note how this is exactly the output of the algorithm for the QCP\@. Call $\alpha={(2\cdot
+  8^{m+1}+K)}^{-1}(K\tau^2+2\cdot 8^{m+1}\cdot H^2)$ and $\beta=2\cdot 8^{m+1}\cdot K$. Rename
+  $x_1$ as $x$. Note how we now have:
+
+  \begin{equation*}
+    x^2\equiv\alpha\mod\beta
+  \end{equation*}
+
+  Renaming $H$ as $\gamma$ gives us the restriction
+
+  \begin{equation*}
+    0\leq x^2\leq\gamma
+  \end{equation*}
+
+  where $\alpha,\beta,\gamma\in\omega$. But this is exactly the theorem. So the QCP is satisfiable
+  if and only if system (III) is satisfiable. But (III) is satisfiable if and only if the
+  propositional formula (i.e.\ 3-SAT) is satisfiable. From this we conclude that QCP is
+  NP-complete.
+\end{proof}
+
+\section{Related problems}
+
+Manders and Adleman proved in both~\cite{qcp1,qcp2} that not only the QCP is NP-complete, but also
+the following:
+
+\begin{theorem}\label{diophantine-thm}
+  The (problem of accepting the) set of Diophantine equations (in a standard binary encoding) of
+  the form
+  \begin{equation*}
+    \alpha x_1^2+\beta x_2-\gamma=0;\quad\alpha,\beta,\gamma\in\omega,
+  \end{equation*}
+  which have natural-number solutions $x_1,x_2$ is NP-complete.
+\end{theorem}
+
+The proof of this theorem starts exactly as the reduction we showed, with the only difference being
+in the choice of $\lambda_1$ and $\lambda_2$. We leave it to the reader to prove this (take
+$\lambda_1={(K+1)}^3$ and $\lambda_2=-1$).
 
 %--------------------------------------------------------------------------------------------------
 
