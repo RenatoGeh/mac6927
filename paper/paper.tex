@@ -53,6 +53,16 @@
 \newcommand{\algorithmautorefname}{Algorithm}
 \algrenewcommand\algorithmicrequire{\textbf{Input}}
 \algrenewcommand\algorithmicensure{\textbf{Output}}
+
+\algnewcommand\algorithmicref{\textbf{Reference}}
+\algnewcommand\Reference{\item[\algorithmicref]}
+\algnewcommand\algorithmicred{\textbf{Reduction}}
+\algnewcommand\Reduction{\item[\algorithmicred]}
+\algnewcommand\algorithmicdesc{\textbf{Description}}
+\algnewcommand\Description{\item[\algorithmicdesc]}
+\algnewcommand\algorithmiccom{\textbf{Comment}}
+\algnewcommand\Commentx{\item[\algorithmiccom]}
+
 \algrenewcomment[1]{\hspace{0.25cm}\(\triangleright\) #1}
 \algnewcommand{\LineComment}[1]{\State\,\(\triangleright\) #1}
 
@@ -116,7 +126,7 @@
 \title{%
   \noindent\rule{13cm}{1.0pt}\\
   \vspace{0.2cm}
-  A Polynomial-time Reduction of the 3-SAT to the Quadratic Congruence Problem and other Related Problems
+  A Polynomial-time Reduction of the 3-SAT to the Quadratic Congruence and other Related Problems
   \noindent\rule{13cm}{0.8pt}
 }
 \xdef\shorttitle{Quadratic congruence polynomial-time reduction}
@@ -140,11 +150,11 @@
 \section{History}
 
 German mathematician David Hilbert published~\cite{hilbert} in 1902 a set of 23 unsolved problems
-in mathematics he deemed to be most important unanswered mathematical problems of the 20th century.
-Since then 9 of them have been solved (at the time the author is writing this line and as far as
-the author is aware), 9 are considered partially solved, three of them are unsolved and two of them
-are considered too vague. Unsolved problems include the infamous Riemann Hypothesis and an
-extension to the Kronecker-Weber Theorem. Amongst solved problems is the 10th Hilbert problem.
+in mathematics he deemed to be the most important mathematical problems of the 20th century.  Since
+then 9 of them have been solved (at the time the author is writing this line and as far as the
+author is aware), 9 are considered partially solved, three of them are unsolved and two of them are
+considered too vague. Unsolved problems include the infamous Riemann Hypothesis and an extension to
+the Kronecker-Weber Theorem. Amongst solved problems is the 10th Hilbert problem.
 
 \textbf{10th Hilbert Problem:} Given a diophantine equation with any number of unknown quantities
 and with rational integral numerical coefficients: \textit{to devise a process according to which
@@ -255,7 +265,7 @@ We can give a format for problems:
   \begin{algorithmic}[1]
     \Require\, $n\in\mathbb{N}$ and a vector $A[1..n]$ with $n$ integers
     \Ensure\, An ordered vector
-    \Statex\, Sorting the vector $A$ in increasing order.
+    \Description\, Sorting the vector $A$ in increasing order.
   \end{algorithmic}
 \end{algorithm}
 
@@ -270,7 +280,7 @@ complexities. We next show a few examples of different types of problems:
   \begin{algorithmic}[1]
     \Require\,$a, b\neq 0\in\mathbb{N}$
     \Ensure\, $d|a$, $d|b$, and for all $d'|a$, $d'|b$ we have $d'\leq d$
-    \Statex\, Finding the $\gcd(a, b)$
+    \Description\, Finding the $\gcd(a, b)$
   \end{algorithmic}
 \end{algorithm}
 
@@ -282,7 +292,7 @@ $\bigo(\ln(\max\{a,b\}))$.
   \begin{algorithmic}[1]
     \Require\, Two strings $X[1..m]$ and $Y[1..n]$
     \Ensure\, A string
-    \Statex\, Finding the longest common subsequence in $X$ and $Y$.
+    \Description\, Finding the longest common subsequence in $X$ and $Y$.
   \end{algorithmic}
 \end{algorithm}
 
@@ -297,7 +307,7 @@ decision problem subproblems:
   \begin{algorithmic}[1]
     \Require\,$a, b\neq 0\in\mathbb{N}$ and $k\in\mathbb{N}$
     \Ensure\, Boolean value
-    \Statex\, Is $\gcd(a, b)=k$ true?
+    \Description\, Is $\gcd(a, b)=k$ true?
   \end{algorithmic}
 \end{algorithm}
 
@@ -306,7 +316,7 @@ decision problem subproblems:
   \begin{algorithmic}[1]
     \Require\, Two strings $X[1..m]$ and $Y[1..n]$
     \Ensure\, Boolean value
-    \Statex\, Is there an LCS of X and Y such that its length $\geq k$?
+    \Description\, Is there an LCS of X and Y such that its length $\geq k$?
   \end{algorithmic}
 \end{algorithm}
 
@@ -342,7 +352,7 @@ returns NO if the answer $\Pi(I)$ is NO and YES for all $\mathcal{C}$ if $\Pi(I)
   \begin{algorithmic}[1]
     \Require\, A graph $G=(V, E)$
     \Ensure\, Boolean value
-    \Statex\, Is there a Hamiltonian cycle, i.e.\ a path $p=(e_1,e_2,\ldots,e_k)$ s.t. $\forall v
+    \Description\, Is there a Hamiltonian cycle, i.e.\ a path $p=(e_1,e_2,\ldots,e_k)$ s.t. $\forall v
     \in V$, $v$ is visited by $p$ exactly once, and $p$ is a cycle?
   \end{algorithmic}
 \end{algorithm}
@@ -381,7 +391,7 @@ $\Pi\leq_p\Pi'$ if there exists a polynomial reduction, from $\Pi$ to $\Pi'$.
     \Require\, A Boolean formula with $n$ variables written in CNF, e.g.\ $(x_1\vee x_2\vee x_2\vee
     x_3)\wedge (\ov{x}_2\vee x_5)\wedge\cdots$
     \Ensure\, Boolean value
-    \Statex\, Is there a valuation $\nu :\{x_1,x_2,\ldots,x_n\}\to\{\false, \true\}$ such that the
+    \Description\, Is there a valuation $\nu :\{x_1,x_2,\ldots,x_n\}\to\{\false, \true\}$ such that the
     input formula evaluates to true?
   \end{algorithmic}
 \end{algorithm}
@@ -392,7 +402,7 @@ $\Pi\leq_p\Pi'$ if there exists a polynomial reduction, from $\Pi$ to $\Pi'$.
     \Require\, A Boolean formula with $n$ variables written in CNF with at most 3 literals in each
     clause, e.g.\ $(x_1\vee x_2\vee x_3)\wedge(\ov{x}_2\vee\ov{x}_1\vee x_5) \wedge\cdots$
     \Ensure\, Boolean value
-    \Statex\, Is there a valuation $\nu :\{x_1,x_2,\ldots,x_n\}\to\{\false, \true\}$ such that the
+    \Description\, Is there a valuation $\nu :\{x_1,x_2,\ldots,x_n\}\to\{\false, \true\}$ such that the
     input formula evaluates to true?
   \end{algorithmic}
 \end{algorithm}
@@ -439,7 +449,7 @@ We first define the QCP as a decision problem.
   \begin{algorithmic}[1]
     \Require\, $\alpha,\beta,\gamma\in\mathbb{Z}$
     \Ensure\, Boolean value
-    \Statex\, Is there a solution $x\in\mathbb{Z}$ where
+    \Description\, Is there a solution $x\in\mathbb{Z}$ where
     \begin{equation*}
       x^2 \equiv\alpha\mod\beta
     \end{equation*}
@@ -1070,7 +1080,7 @@ We join these conditions into the new system (III):
   (ii) \quad &\lambda_1 2\cdot 8^{m+1}(H^2-x_1^2)+\lambda_2 K(\tau^2-x_1^2)\equiv 0\mod 2\cdot
     8^{m+1}\cdot K, &\text{(III)}\\
   (iii) \quad &\gcd(\lambda_1,K)=\gcd(\lambda_2,2\cdot 8^{m+1})=1,\quad\lambda_1,\lambda_2\in
-    \mathbb{Z}
+    \mathbb{Z}.
 \end{align*}
 
 In fact, choosing $\lambda_1$ and $\lambda_2$ provides proofs for two problems: the quadratic
@@ -1140,7 +1150,100 @@ The proof of this theorem starts exactly as the reduction we showed, with the on
 in the choice of $\lambda_1$ and $\lambda_2$. We leave it to the reader to prove this (take
 $\lambda_1={(K+1)}^3$ and $\lambda_2=-1$).
 
+\begin{algorithm}[h]
+  \caption*{\textbf{Problem:} 0\texttt{-}1 knapsack}
+  \begin{algorithmic}[1]
+    \Require\, Set of $n$ items, weights $w_1,\ldots,w_n$, values $v_1,\ldots,v_n$ and maximum
+    capacity $W$, all positive integers
+    \Description\, Can a value of at least $V$ be achieved without exceeding $W$?
+    \Reduction\, Exact cover
+    \Reference\, [Karp, 1972 (\cite{karp})]
+  \end{algorithmic}
+\end{algorithm}
+
+When describing the algorithm in~\cite{qcp2}, Adleman and Manders commented on the algorithm's
+similarity to the Knapsack problem. In fact, we can reduce QCP to Knapsack, as the algorithm for
+Knapsack can be used as a subroutine for the algorithm quoted in this paper. In fact, Knapsack is
+satisfiable if and only if $\sum_{j=0}^n c_j\alpha_j\equiv\tau\mod 8^{m+1}$.
+
+We end this paper with a list of selected Number Theory problems that were shown to be NP-complete.
+This list was extracted from~\cite{garey-johnson}. All the following problems are decision
+problems, meaning we will ommit their output, as they should all return a boolean value.  We label
+as \textbf{Reduction} the transformation done in the proof (e.g.\ the 3-SAT was reduced to the QCP
+in our proof), and as \textbf{Reference} the article with the reduction. The field \textbf{Comment}
+contains comments given by Garey and Johnson on each problem~\cite{garey-johnson}.
+
+\begin{algorithm}[h]
+  \caption*{\textbf{Problem:} simultaneous incongruences}
+  \begin{algorithmic}[1]
+    \Require\, Collection $\{(a_1,b_1),\ldots,(a_n,b_n)\}$ of ordered pairs of positive integers,
+    with $a_i\leq b_i$ for $1\leq i\leq n$
+    \Description\, Is there an integer $x$ such that, for $1\leq i\leq n, x\not\equiv a_i\mod b_i$?
+    \Reduction\, 3-SAT
+    \Reference\,~\cite{stockmeyer-meyer}
+  \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[h]
+  \caption*{\textbf{Problem:} root of modulus 1}
+  \begin{algorithmic}[1]
+    \Require\, Ordered pairs $(a[i],b[i])$, $1\leq i\leq n$, of integers, with each $b[i]\geq 0$.
+    \Description\, Does the polynomial $\sum_{i=1}^n a[i]\cdot z^{b[i]}$ have a root on the complex
+    unit circle, i.e., is there a complex number $q$ with $|q|=1$ such that $\sum_{i=1}^n a[i]\cdot
+    q^{b[i]}=0$?
+    \Reduction\, 3-SAT
+    \Reference\,~\cite{plaisted-77b}
+    \Commentx\, Not known to be in NP or co-NP\@.
+  \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[h]
+  \caption*{\textbf{Problem:} cosine product integration}
+  \begin{algorithmic}[1]
+    \Require\, Sequence $(a_1,a_2,\ldots,a_n)$ of integers
+    \Description\, Does $\int_0^{2\pi}(\prod_{i=1}^n \cos(a_i\theta))d\theta=0$?
+    \Reduction\, Partition
+    \Reference\,~\cite{plaisted-76}
+    \Commentx\, Solvable in pseudo-polynomial time.
+  \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[h]
+  \caption*{\textbf{Problem:} non-trivial greatest common divisor}
+  \begin{algorithmic}[1]
+    \Require\, Sequences $A_i=<(a_i[1],b_i[1]),\ldots,(a_i[k],b_i[k])>$, $1\leq i\leq m$, of pairs
+    of integers, with each $b_i[j]\geq 0$.
+    \Description\, Does the $\gcd$ of the polynomials $\sum_{j=1}^k a_i[j]\cdot z^{b_i[j]}$, $1\leq
+    i\leq m$, have a degree greater than zero?
+    \Reduction\, 3-SAT
+    \Reference\,~\cite{plaisted-77a}
+    \Commentx\, Not known to be in NP or co-NP\@. Remains NP-hard if each $a_i[j]$ is either $-1$
+    or $+1$~\cite{plaisted-76} or if $m=2$~\cite{plaisted-77b}. The analogous problem in which the
+    instance also includes a positive integer $K$, and we are asked if the least common multiple of
+    the given polynomials has degree less than $K$, is NP-hard under the same restrictions. Both
+    problems can be solved in pseudo-polynomial time using standard algorithms.
+  \end{algorithmic}
+\end{algorithm}
+\newpage
+
+\begin{algorithm}[h]
+  \caption*{\textbf{Problem:} simultaneous divisibility of linear polynomials}
+  \begin{algorithmic}[1]
+    \Require\, Vectors $a_i=(a_i[0],\ldots,a_i[m])$ and $b_i=(b_i[0],\ldots,b_i[m])$, $1\leq i\leq
+    n$, with positive integer entries
+    \Description\, Do there exist positive integers $x_1,x_2,\ldots,x_m$ such that, for $1\leq
+    i\leq n$, $a_i[0]+\sum_{j=1}^m(a_i[j]\cdot x_j)$ divides $b_i[0]+\sum_{j=1}^m(b_i[j]\cdot
+    x_j)$?
+    \Reduction\, Quadratic diophantine equations (i.e.\ \autoref{diophantine-thm})
+    \Reference\,~\cite{lipshitz-77,lipshitz-78}
+    \Commentx\, Not known to be in NP, but belongs to NP for any fixed $n$. NP-complete for any
+    fixed $n\geq 5$. General problem is undecidable if the vector entries and the $x_j$ are allowed
+    to range over the ring of ``integers'' in a real quadratic extension of the rationals.
+  \end{algorithmic}
+\end{algorithm}
+
 %--------------------------------------------------------------------------------------------------
+\newpage
 
 \printbibliography[]
 
