@@ -149,30 +149,33 @@
 
 \section{History}
 
-German mathematician David Hilbert published~\cite{hilbert} in 1902 a set of 23 unsolved problems
-in mathematics he deemed to be the most important mathematical problems of the 20th century.  Since
-then 9 of them have been solved (at the time the author is writing this line and as far as the
-author is aware), 9 are considered partially solved, three of them are unsolved and two of them are
-considered too vague. Unsolved problems include the infamous Riemann Hypothesis and an extension to
-the Kronecker-Weber Theorem. Amongst solved problems is the 10th Hilbert problem.
+German mathematician David Hilbert published in 1902~\cite{hilbert} a set of 23 unsolved problems
+in mathematics he deemed to be the most important mathematical problems to be solved in the 20th
+century. Since then 9 of them have been solved, 9 are considered partially resolved, three of them
+are unsolved and two of them are considered too vague (as of the time the author is writing this
+line and as far as the author is aware). Unsolved problems include the infamous Riemann Hypothesis
+and an extension to the Kronecker-Weber Theorem. Amongst solved problems is the 10th Hilbert
+problem.
 
 \textbf{10th Hilbert Problem:} Given a diophantine equation with any number of unknown quantities
 and with rational integral numerical coefficients: \textit{to devise a process according to which
 it can be determined by a finite number of operations whether the equation is solvable in rational
 integers}.
 
-It was answered in 1970 by Matiyasevich~\cite{diophantine} to be impossible. The question now
+It was answered in 1970 by Matiyasevich to be impossible~\cite{diophantine}. The question now
 becomes, in which cases is there an algorithm for solvability and what is the complexity of such
-algorithms? In 1976, Adleman and Manders~\cite{qcp1} partially answered these questions by proving
-that, for the quadratic cases, there exists an algorithm and it is NP-complete. In their proof,
-they also found that, through a slight modification in the final step of their proof, it was
-possible to answer the quadratic congruence problem. A cleaner version of this proof was published
-in 1978 by Adleman and Manders~\cite{qcp2}, proof we try to explain in this paper.
+algorithm? In 1976, Adleman and Manders~\cite{qcp1} partially answered these questions by proving
+that, for the quadratic case, there exists an algorithm and the problem of finding the solutions is
+NP-complete. In their proof, they also found that, through a slight modification in the final step
+of their proof, it was possible to answer the quadratic congruence problem. A cleaner version of
+this proof was published in 1978 by Adleman and Manders~\cite{qcp2}, proof we try to explain in
+this paper.
 
-In this paper we focus on the second result of Adleman and Manders' 1978 article, but also show the
-main result, namely that the set of quadratic diophantine equations with natural numbers solutions
-is NP-complete. The proof is done through a polynomial-time reduction from the 3-SAT problem. This
-reduction implies that both problems covered in Adleman and Manders' article are in NP-complete.
+In this paper we focus on the second result of Adleman and Manders' 1978 article (namely that the
+quadratic congruence problem is NP-complete), but also briefly show the main result, i.e\ that
+the set of quadratic diophantine equations with natural numbers solutions is NP-complete. The proof
+is done through a polynomial-time reduction from the 3-SAT problem. This reduction implies that
+both problems covered in Adleman and Manders' article are NP-complete.
 
 In 1971, American mathematician Stephen Cook published ``The Complexity of Theorem-proving
 Procedures''~\cite{cook}, and in the next year, his fellow countryman Richard Karp published
@@ -180,16 +183,22 @@ Procedures''~\cite{cook}, and in the next year, his fellow countryman Richard Ka
 of P and NP classes, yielding the duo a Turing Award. Interestingly in 1973, on the other side of
 the Iron Curtain, Ukrainian Leonard Levin published~\cite{levin} in the USSR equivalent results to
 Cook's and Karp's, but considering search problems instead of decision problems (an interesting
-remark is that Levin did not receive a Turing Award for his work, despite having achieved
-equivalent results). Both works resulted in the following statement: that any problem in NP can be
-reduced in polynomial time by a deterministic Turing machine to the problem of satisfiability of a
-Boolean formula, i.e.\ the SAT problem.  Additionally, if there exists a deterministic polynomial
-time algorithm for solving SAT, then every NP problem can be solved by a deterministic polynomial
-time algorithm.
+remark is that Levin did not receive a Turing Award for his work, despite achieving equivalent
+results). Both works resulted in the following statement: that any problem in NP can be reduced in
+polynomial time, in a deterministic Turing machine, to the problem of satisfiability of a Boolean
+formula, i.e.\ the SAT problem.  Additionally, if there exists a deterministic polynomial time
+algorithm for solving SAT, then every NP problem can be solved by a deterministic polynomial time
+algorithm.
 
 This independent, parallel work from opposite parts of the world, ideologically and geographically,
 gave rise to what is considered one of the most important open questions in theoretical computer
 science, the P vs NP problem.
+
+In his 1972 paper, Karp also published a list of 21 NP-complete problems, showing the
+polynomial-time reductions of 21 problems. Below is Karp's list, where the nesting indicates the
+direction of the reduction. For instance, the exact cover problem was reduced to the knapsack
+problem, chromatic number was reduced to exact cover, 3-SAT was reduced to exact cover, and the SAT
+was reduced to the 3-SAT problem.
 
 \begin{deepitemize}
   \item Satisfiability (SAT)
@@ -233,17 +242,11 @@ science, the P vs NP problem.
     \end{deepitemize}
 \end{deepitemize}
 
-In his 1972 paper, Karp also published a list of 21 NP-complete problems in which he showed
-reductions implying its membership in the NP-complete class. The list above is Karp's 21
-NP-complete problems, where the nesting indicates the direction of the reduction. For instance, the
-exact cover problem was reduced to the knapsack problem, chromatic number was reduced to exact
-cover, 3-SAT was reduced to exact cover, and the SAT was reduced to the 3-SAT problem.
-
-From this we know that the 3-SAT is NP-complete. Not only that, any problem that reduces 3-SAT is
-also in NP\@. In the next sections we will provide a brief review on polynomial-time reductions,
-present proper definitions on the QCP and 3-SAT, and prove the reduction. This section provided a
-brief historical overview, but we do not restrict historical remarks to only this section. When
-relevant, we provide short historical anecdotes on the subject.
+From this we know that one can reduce 3-SAT to any problem that the latter will be proved to be
+NP-complete. In the next sections we will provide a brief review on polynomial-time reductions,
+present proper definitions on the QCP and 3-SAT, and finally prove the reduction. The last section
+is devoted to related problems. We show the Diophantine problem presented in~\cite{qcp2} and other
+Number Theory problems reductions.
 
 \section{Brief Review on Complexity Theory}
 
@@ -270,10 +273,10 @@ We can give a format for problems:
 \end{algorithm}
 
 It is natural to conclude that problems have a certain complexity attached to them. Furthermore, we
-can provide several algorithms that take the same input and yield the same output. In this case in
-particular we know that sorting a vector is $\bigo(n\ln n)$ at best. Examples of algorithms for the
-above problem are InsertSort, MergeSort and BubbleSort, with each one having different worst case
-complexities. We next show a few examples of different types of problems:
+can provide several algorithms that give answers to our problems. In this case in particular we
+know that sorting a vector is $\bigo(n\lg n)$ at best. Examples of algorithms for the above problem
+are InsertSort, MergeSort and BubbleSort, with each one having different worst case complexities.
+We next show a few examples of different types of problems:
 
 \begin{algorithm}[h]
   \caption*{\textbf{Search problem:} greatest common divisor}
@@ -338,7 +341,7 @@ $\bigo(2^{n_1})$, where $n_i$ is the length of the $i$-th string, and thus is no
 
 Let $\Pi$ be a Problem. We say that $\Pi$ admits a polynomial verifier $\verifier$ for a YES answer
 if there exists a polynomial algorithm that takes an instance $I$ of $\Pi$ and an object
-$\mathcal{C}$ such that the size of $\mathcal{C}$ is polynomial and returns YES for some
+$\mathcal{C}$ such that the size of $\mathcal{C}$ is polynomial in $I$ and returns YES for some
 $\mathcal{C}$ if the answer $\Pi(I)$ is YES and NO for all $\mathcal{C}$ if $\Pi(I)$ is NO\@.
 
 In other words, $\verifier$ takes an instance $I$ and checks whether such an instance is a true
@@ -642,16 +645,16 @@ in fact hold for the if and only if satisfiability.
   With no loss of generality, we can enumerate all possible clauses $\sigma_k$ as follows
 
   \begin{align*}
-    &(x_p\vee x_q\vee x_l): &y_k=r(x_p)+r(x_q)+r(x_l)-1\implies &-1\leq y_k\leq 2\\
-    &(\ov{x}_p\vee x_q\vee x_l): &y_k=r(x_q)+r(x_l)+1-r(x_p)-1\implies &-1\leq y_k\leq 2\\
-    &(\ov{x}_p\vee\ov{x}_q\vee x_l):&y_k=r(x_l)+2-r(x_p)-r(x_q)-1\implies &-1\leq y_k\leq 2\\
-    &(\ov{x}_p\vee\ov{x}_q\vee\ov{x}_l):&y_k=3-r(x_p)-r(x_q)-r(x_l)-1\implies &-1\leq y_k\leq 2
+    &(x_p\vee x_q\vee x_t): &y_k=r(x_p)+r(x_q)+r(x_t)-1\implies &-1\leq y_k\leq 2\\
+    &(\ov{x}_p\vee x_q\vee x_t): &y_k=r(x_q)+r(x_t)+1-r(x_p)-1\implies &-1\leq y_k\leq 2\\
+    &(\ov{x}_p\vee\ov{x}_q\vee x_t):&y_k=r(x_t)+2-r(x_p)-r(x_q)-1\implies &-1\leq y_k\leq 2\\
+    &(\ov{x}_p\vee\ov{x}_q\vee\ov{x}_t):&y_k=3-r(x_p)-r(x_q)-r(x_t)-1\implies &-1\leq y_k\leq 2
   \end{align*}
 
   Note how in all cases above, the clause is satisfiable if and only if $y_k\neq -1$. In the first
   case, when $y_k=-1$, no literal $x_i$ is valuated as true. In the second case, when $y_k\neq -1$,
   no literal $x_i$ is valuated as true and $\ov{x}_p$ is valuated as false. The third case is
-  similar, with $x_l$ false, and $\ov{x}_p,\ov{x}_q$ false. For the last case, all $\ov{x}_i$ are
+  similar, with $x_t$ false, and $\ov{x}_p,\ov{x}_q$ false. For the last case, all $\ov{x}_i$ are
   set to false. When $y_k\neq -1$, there exists some literal being valuated as true, and therefore
   the clause $\sigma_k$ is valuated as true.
 
@@ -664,10 +667,10 @@ in fact hold for the if and only if satisfiability.
   Enumerating all literal combinations we have:
 
   \begin{align*}
-    &(x_p\vee x_q\vee x_l): &y_k=r(x_p)+r(x_q)+r(x_l)\implies &0\leq y_k\leq 3\\
-    &(\ov{x}_p\vee x_q\vee x_l): &y_k=r(x_q)+r(x_l)+1-r(x_p)\implies &0\leq y_k\leq 3\\
-    &(\ov{x}_p\vee\ov{x}_q\vee x_l):&y_k=r(x_l)+2-r(x_p)-r(x_q)\implies &0\leq y_k\leq 3\\
-    &(\ov{x}_p\vee\ov{x}_q\vee\ov{x}_l):&y_k=3-r(x_p)-r(x_q)-r(x_l)\implies &0\leq y_k\leq 3
+    &(x_p\vee x_q\vee x_t): &y_k=r(x_p)+r(x_q)+r(x_t)\implies &0\leq y_k\leq 3\\
+    &(\ov{x}_p\vee x_q\vee x_t): &y_k=r(x_q)+r(x_t)+1-r(x_p)\implies &0\leq y_k\leq 3\\
+    &(\ov{x}_p\vee\ov{x}_q\vee x_t):&y_k=r(x_t)+2-r(x_p)-r(x_q)\implies &0\leq y_k\leq 3\\
+    &(\ov{x}_p\vee\ov{x}_q\vee\ov{x}_t):&y_k=3-r(x_p)-r(x_q)-r(x_t)\implies &0\leq y_k\leq 3
   \end{align*}
 
   The analysis for this case goes analogally to the previous case, but with $y_k=0$ being
