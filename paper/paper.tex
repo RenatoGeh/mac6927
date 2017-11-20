@@ -257,9 +257,9 @@ give other examples of NP-complete problems.
 Before we prove reductions, we first need to properly define the concepts we are going to use. We
 shall define a Problem as a question that takes a set of objects as input and returns another set
 of objects as output. There are many types of problems: decision problems, where the output is
-restricted to yes or no (or true or false) answers; optimization problems, where the answer is
-given by a particular element of a set such that such an object optimizes certain criteria; and
-search problems, which is when the answer is an element of the set of output answers.
+restricted to yes or no (or true or false) answers; search problems, when the output is an element
+of the set; and optimization problems where the answer is given by a particular element of the set
+that optimizes certain criteria.
 
 We can give a format for problems:
 
@@ -274,9 +274,10 @@ We can give a format for problems:
 
 It is natural to conclude that problems have a certain complexity attached to them. Furthermore, we
 can provide several algorithms that give answers to our problems. In this case in particular we
-know that sorting a vector is $\bigo(n\lg n)$ at best. Examples of algorithms for the above problem
-are InsertSort, MergeSort and BubbleSort, with each one having different worst case complexities.
-We next show a few examples of different types of problems:
+know that sorting a vector through comparison is $\bigo(n\lg n)$ at best. Examples of algorithms
+for the above problem are InsertionSort, MergeSort and BubbleSort, with each one having different
+worst case complexities.  We next show a few examples of different types of problems:
+\newpage
 
 \begin{algorithm}[h]
   \caption*{\textbf{Search problem:} greatest common divisor}
@@ -287,7 +288,7 @@ We next show a few examples of different types of problems:
   \end{algorithmic}
 \end{algorithm}
 
-The Euclidean algorithm is an example of an algorithm that solves the gcd problem, with
+The Euclidean algorithm is an example of an algorithm that solves the gcd problem in
 $\bigo(\ln(\max\{a,b\}))$.
 
 \begin{algorithm}[h]
@@ -301,9 +302,9 @@ $\bigo(\ln(\max\{a,b\}))$.
 
 This classic computer science problem turns out to be $\Theta(m\cdot n)$. Following Cook and
 Karp's, we treat only the case for decision problems. One might think this severly restricts the
-generality of complexity classes, but it is easy to see that one can treat optimization and search
-problems as special cases of decision problems. We do this by restricting these problems into their
-decision problem subproblems:
+generality of complexity classes, but it is easy to see that one can treat decision problems as
+special cases of optimization and search problems. We do this by restricting these problems into
+their decision problem subproblems:
 
 \begin{algorithm}[h]
   \caption*{\textbf{Decision problem:} greatest common divisor}
@@ -327,13 +328,14 @@ We simply added a $k$ restriction on the input and modified the question so that
 yes or no question.
 
 For the next part we assume Turing machines to be already defined, as we wish to keep this section
-brief, as the title says. We consider an algorithm a series of steps that can be performed by a
-Turing machine. A problem is solvable in polynomial time if there exists an algorithm that takes a
-polynomial number of steps on the size of the instance. We define an instance as a particular input
-of a problem. In the $\gcd$ decision problem, we could take the tuple $(253, 37, 1)$ as an instance
-of the input. Both the Euclidean algorithm and the optimal 2-dimension LCS algorithm run in
-polynomial time on the size of the instance. However, the general case of the LCS algorithm is
-$\bigo(2^{n_1})$, where $n_i$ is the length of the $i$-th string, and thus is not polynomial.
+brief, as the title says. We consider an algorithm a series of finite steps that can be performed
+by a Turing machine. A problem is solvable in polynomial time if there exists an algorithm that
+takes a polynomial number of steps on the size of the instance. We define an instance as a
+particular input of a problem. In the $\gcd$ decision problem, we could take the tuple $(253, 37,
+1)$ as an instance of the input. Both the Euclidean algorithm and the optimal 2-dimension LCS
+algorithm run in polynomial time on the size of the instance. However, the general case of the LCS
+algorithm is $\bigo(2^{n_1})$, where $n_i$ is the length of the $i$-th string, and thus not
+polynomial.
 
 \begin{definition} The P class is the set of all decision problems that can be solved by polynomial
   (on the size of the instance) time algorithms.
@@ -384,9 +386,9 @@ Note how every problem in P is already in NP and co-NP, since the algorithm that
 could be used as a verifier for both the YES and NO answer.
 
 Let $\Pi$ and $\Pi'$ be problems. A polynomial-time reduction from $\Pi$ to $\Pi'$ is an algorithm
-that solves $\Pi$ using an algorithm that solves $\Pi'$ as a subroutine, and that, excluding its
-subroutine, is polynomial on the size of its instance. We denote such a reduction by
-$\Pi\leq_p\Pi'$ if there exists a polynomial reduction, from $\Pi$ to $\Pi'$.
+that solves $\Pi$ using an algorithm that solves $\Pi'$ as a subroutine, and that (excluding its
+subroutine) is polynomial on the size of its instance. We denote such a reduction by
+$\Pi\leq_p\Pi'$ if there exists a polynomial reduction from $\Pi$ to $\Pi'$.
 
 \begin{algorithm}[h]
   \caption*{\textbf{Problem:} SAT}
@@ -412,7 +414,7 @@ $\Pi\leq_p\Pi'$ if there exists a polynomial reduction, from $\Pi$ to $\Pi'$.
 
 We can prove that SAT $\leq_p$ 3-SAT by turning the clauses in the SAT problem into 3-SAT
 clauses~\cite{karp}. Recall Karp's 23 NP-complete list of problems. Each nesting means that the
-nested item $\Pi'$ and its parent item $\Pi$ obey $\Pi\leq_p\Pi'$. The SAT problem, can also be
+nested item $\Pi'$ and its parent item $\Pi$ obey $\Pi\leq_p\Pi'$. The SAT problem can also be
 reduced to the Hamiltonian cycle problem by turning edges and vertices into SAT clauses. The vertex
 cover problem can also be reduced to the Hamiltonian cycle problem~\cite{karp}.
 
@@ -431,7 +433,7 @@ problem $\Pi'$ is NP-complete consists of the following steps:
 \end{enumerate}
 
 \begin{definition} A problem $\Pi$ is NP-hard if the existence of a polynomial algorithm for $\Pi$
-  implies on $\p=\np$.
+  implies in $\p=\np$.
 \end{definition}
 
 So every NP-complete problem is NP-hard, but an NP-hard problem is not necessarily in NP\@.
@@ -652,11 +654,11 @@ in fact hold for the if and only if satisfiability.
   \end{align*}
 
   Note how in all cases above, the clause is satisfiable if and only if $y_k\neq -1$. In the first
-  case, when $y_k=-1$, no literal $x_i$ is valuated as true. In the second case, when $y_k\neq -1$,
-  no literal $x_i$ is valuated as true and $\ov{x}_p$ is valuated as false. The third case is
+  case, when $y_k=-1$, no literal $x_i$ is evaluated as true. In the second case, when $y_k\neq -1$,
+  no literal $x_i$ is evaluated as true and $\ov{x}_p$ is evaluated as false. The third case is
   similar, with $x_t$ false, and $\ov{x}_p,\ov{x}_q$ false. For the last case, all $\ov{x}_i$ are
-  set to false. When $y_k\neq -1$, there exists some literal being valuated as true, and therefore
-  the clause $\sigma_k$ is valuated as true.
+  set to false. When $y_k\neq -1$, there exists some literal being evaluated as true, and therefore
+  the clause $\sigma_k$ is evaluated as true.
 
   For case (2), we do the same. In this case, $y_k$ is of the form:
 
@@ -1138,7 +1140,7 @@ We now finally provide a proof for~\autoref{qcp-thm}.
 \section{Related problems}
 
 Manders and Adleman proved in both~\cite{qcp1,qcp2} that not only the QCP is NP-complete, but also
-the following:
+that
 
 \begin{theorem}\label{diophantine-thm}
   The (problem of accepting the) set of Diophantine equations (in a standard binary encoding) of
