@@ -244,9 +244,9 @@ was reduced to the 3-SAT problem.
 
 From this we know that one can reduce 3-SAT to any problem that the latter will be proved to be
 NP-complete. In the next sections we will provide a brief review on polynomial-time reductions,
-present proper definitions on the QCP and 3-SAT, and finally prove the reduction. The last section
-is devoted to related problems. We show the Diophantine problem presented in~\cite{qcp2} and other
-Number Theory problems reductions.
+present proper definitions on the QCP and 3-SAT, and finally prove the reduction. We then try to
+give some intuition on the proof. The last section is devoted to related problems. We show the
+Diophantine problem presented in~\cite{qcp2} and other Number Theory problems reductions.
 
 \section{Brief Review on Complexity Theory}
 
@@ -1136,6 +1136,50 @@ We now finally provide a proof for~\autoref{qcp-thm}.
   propositional formula (i.e.\ 3-SAT) is satisfiable. From this we conclude that QCP is
   NP-complete.
 \end{proof}
+
+\section{Intuition}
+
+In this section we try to give some intuition on the reduction. It might be convenient to keep the
+reduction and algorithm sections close by, so that one can reference them back following the
+statements made here.
+
+One can summarize the proof as trying to find an algorithm that converts a 3-CNF formula to an
+expression of the quadratic congruence form. In the algorithm stated in the last section, we took
+as input the 3-CNF formula $\phi$ and as output an expression of the QCP form. We do not give a
+particular form for $\phi$ because it is not needed for the proof. In fact, we only need to prove
+that $\phi$ is satisfiable if and only if the quadratic congruence formula is satisfiable (i.e.\
+there is a solution for $x$ obeying the QCP conditions). The satisfiability of $\phi$ is guaranteed
+by the 3-SAT problem, so our goal is then to show that if we can find a valuation for the 3-SAT
+problem, then there is a corresponding valuation for the QCP to be satisfiable.
+
+The proof's first step is to show that, by using a certain function $r$, we can transform the 3-CNF
+formula to a congruence. That is, show that the LHS below is satisfiable if and only if the RHS is
+satisfiable.
+
+\begin{equation*}
+  \sum_{k=0}^m R_k\cdot 8^k\equiv 0\mod 8^{m+1} \iff \phi
+\end{equation*}
+
+We do this by defining $R_k$ dependent on $\sigma_k$, so that $R_k$ is satisfiable if and only if
+all $\sigma_k$ are satisfiable (and therefore $\phi$ satisfiable). Now that the set of all $R_k$ is
+satisfiable if and only if $\phi$ is satisfiable, we need to manipulate $R_k$ such that there is a
+congruence in there somewhere, as we need to have something that resembles $x^2\alpha\equiv\beta$.
+We do this by summing all clauses $\sigma_k$. Note that in~\autoref{eq-2}, we are summing all
+$\sigma_k$ through $R_k$. In fact, one can think of each term $R_k\cdot 8^k$ as an octal encoding
+of each 3-clause ($2^3$) (thanks to Thales for this great insight). This encoding maps a certain
+valuation $y_k$ at each clause. If we look back to the proof of~\autoref{eq-1}, we can see that
+there are 4 possible valuations (one can easily see that other permutations are equivalent) for
+$y_k$. This valuation is encoded by $y_k$, as there are only 4 possible values of $y_k$ that make
+$R_k$ satisfiable: $\{0,1,2,3\}$. So the set of $\{y_k\in\{0,1,2,3\}|0\leq k\leq m\}$ is actually
+the 3-SAT valuation.  Note how in~\autoref{eq-2}, for $R_k$ to be zero, $y_k\in\{0,1,2,3\}$, and so
+the summation on the RHS encodes the same valuation.
+
+The goal is then to keep this encoding satisfiable if and only if $\phi$ is satisfiable, and also
+get something of the form $x^2\equiv\alpha\mod\beta$. We do this by getting to~\autoref{eq-3}.
+\autoref{eq-p2} then replaces variables from~\autoref{eq-3} with variables from the algorithm,
+whilst at the same time maintaining the if and only if satisfiability. The rest of the proof does
+similar transformations, trying to keep the satisfiability of each system and also transforming
+the expressions into something that looks like~\autoref{qcp-thm}.
 
 \section{Related problems}
 
